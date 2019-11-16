@@ -14,7 +14,7 @@ from loss import DiceLoss
 from transform import transforms
 from unet import UNet
 from utils import log_images, dsc
-
+from models.networks.unet_grid_attention_3D import *
 
 def main(args):
     makedirs(args)
@@ -24,7 +24,8 @@ def main(args):
     loader_train, loader_valid = data_loaders(args)
     loaders = {"train": loader_train, "valid": loader_valid}
 
-    unet = UNet(in_channels=Dataset.in_channels, out_channels=Dataset.out_channels)
+    # unet = UNet(in_channels=Dataset.in_channels, out_channels=Dataset.out_channels)
+    unet = unet_grid_attention_3D(in_channels=Dataset.in_channels)
     unet.to(device)
 
     dsc_loss = DiceLoss()
