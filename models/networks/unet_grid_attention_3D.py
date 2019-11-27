@@ -6,7 +6,7 @@ from models.networks_other import init_weights
 
 class unet_grid_attention_3D(nn.Module):
 
-    def __init__(self, feature_scale=4, n_classes=21, is_deconv=True, in_channels=3,
+    def __init__(self, feature_scale=4, n_classes=1, is_deconv=True, in_channels=3,
                  nonlocal_mode='concatenation', attention_dsample=(2,2,2), is_batchnorm=True):
         super(unet_grid_attention_3D, self).__init__()
         self.is_deconv = is_deconv

@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 class unet_nonlocal_2D(nn.Module):
 
-    def __init__(self, feature_scale=4, n_classes=21, is_deconv=True, in_channels=3,
+    def __init__(self, feature_scale=4, n_classes=1, is_deconv=True, in_channels=3,
                  is_batchnorm=True, nonlocal_mode='embedded_gaussian', nonlocal_sf=4):
         super(unet_nonlocal_2D, self).__init__()
         self.is_deconv = is_deconv
