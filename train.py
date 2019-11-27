@@ -7,7 +7,7 @@ import torch
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-
+import multiprocessing
 from dataset import BrainSegmentationDataset as Dataset
 from logger import Logger
 from loss import DiceLoss
@@ -15,8 +15,10 @@ from transform import transforms
 from unet import UNet
 from utils import log_images, dsc
 from models.networks.unet_grid_attention_3D import *
+from models.networks.unet_nonlocal_2D import *
 
 def main(args):
+    multiprocessing.set_start_method('spawn', force=True)
     makedirs(args)
     snapshotargs(args)
     device = torch.device("cpu" if not torch.cuda.is_available() else args.device)
@@ -24,13 +26,13 @@ def main(args):
     loader_train, loader_valid = data_loaders(args)
     loaders = {"train": loader_train, "valid": loader_valid}
 
-    # unet = UNet(in_channels=Dataset.in_channels, out_channels=Dataset.out_channels)
-    unet = unet_grid_attention_3D(in_channels=Dataset.in_channels)
+    unet = UNet(in_channels=Dataset.in_channels, out_channels=Dataset.out_channels)
+    # unet = unet_grid_attention_3D(in_channels=Dataset.in_channels)
     unet.to(device)
 
     dsc_loss = DiceLoss()
     best_validation_dsc = 0.0
-
+    
     optimizer = optim.Adam(unet.parameters(), lr=args.lr)
 
     logger = Logger(args.logs)
@@ -62,7 +64,7 @@ def main(args):
                     y_pred = unet(x)
 
                     loss = dsc_loss(y_pred, y_true)
-
+                    # print("Loss : ", loss)
                     if phase == "valid":
                         loss_valid.append(loss.item())
                         y_pred_np = y_pred.detach().cpu().numpy()
@@ -209,7 +211,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--workers",
         type=int,
-        default=4,
+        default=0,
         help="number of workers for data loading (default: 4)",
     )
     parser.add_argument(

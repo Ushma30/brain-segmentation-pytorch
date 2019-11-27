@@ -65,21 +65,21 @@ class BrainSegmentationDataset(Dataset):
         # create list of tuples (volume, mask)
         self.volumes = [(volumes[k], masks[k]) for k in self.patients]
 
-        print("cropping {} volumes...".format(subset))
-        # crop to smallest enclosing volume
-        self.volumes = [crop_sample(v) for v in self.volumes]
+        # print("cropping {} volumes...".format(subset))
+        # # crop to smallest enclosing volume
+        # self.volumes = [crop_sample(v) for v in self.volumes]
 
-        print("padding {} volumes...".format(subset))
-        # pad to square
-        self.volumes = [pad_sample(v) for v in self.volumes]
+        # print("padding {} volumes...".format(subset))
+        # # pad to square
+        # self.volumes = [pad_sample(v) for v in self.volumes]
 
-        print("resizing {} volumes...".format(subset))
-        # resize
-        self.volumes = [resize_sample(v, size=image_size) for v in self.volumes]
+        # print("resizing {} volumes...".format(subset))
+        # # resize
+        # self.volumes = [resize_sample(v, size=image_size) for v in self.volumes]
 
-        print("normalizing {} volumes...".format(subset))
-        # normalize channel-wise
-        self.volumes = [(normalize_volume(v), m) for v, m in self.volumes]
+        # print("normalizing {} volumes...".format(subset))
+        # # normalize channel-wise
+        # self.volumes = [(normalize_volume(v), m) for v, m in self.volumes]
 
         # probabilities for sampling slices based on masks
         self.slice_weights = [m.sum(axis=-1).sum(axis=-1) for v, m in self.volumes]
